@@ -1,0 +1,8 @@
+---
+# etcd 角色的 handlers
+
+- name: restart etcd
+  systemd:
+    name: etcd
+    state: restarted
+    enabled: yes

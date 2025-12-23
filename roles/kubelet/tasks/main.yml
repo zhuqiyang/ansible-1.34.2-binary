@@ -1,0 +1,15 @@
+---
+- name: 检查 kubeletok 文件是否存在
+  stat:
+    path: /root/.state/kubeletok
+  register: kubeletok_result
+  no_log: true
+
+- name: kubelet已安装
+  debug:
+    msg: kubelet已安装
+  when: kubeletok_result.stat.exists
+
+- name: 安装 kubelet
+  include_tasks: install-kubelet.yml
+  when: not kubeletok_result.stat.exists

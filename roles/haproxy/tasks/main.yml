@@ -1,0 +1,18 @@
+---
+# 检查 haproxyok 文件是否存在
+- name: 检查 haproxyok 文件是否存在
+  stat:
+    path: /root/.state/haproxyok
+  register: haproxyok_result
+  no_log: true
+
+- name: haproxy已安装
+  debug:
+    msg: haproxy已安装
+  when: haproxyok_result.stat.exists
+
+# 安装 haproxy
+- name: 安装 haproxy
+  include_tasks: install-haproxy.yml
+  when: not haproxyok_result.stat.exists
+

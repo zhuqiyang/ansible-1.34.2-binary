@@ -1,0 +1,9 @@
+---
+# keepalived 角色的 handlers
+
+- name: restart keepalived
+  systemd:
+    name: keepalived
+    state: restarted
+    enabled: yes
+

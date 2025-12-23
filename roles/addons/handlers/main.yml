@@ -1,0 +1,7 @@
+---
+# addons 角色的 handlers
+
+- name: reload addons
+  debug:
+    msg: "Addons 已重新加载"
+

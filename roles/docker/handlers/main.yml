@@ -1,0 +1,9 @@
+---
+# docker 角色的 handlers
+
+- name: restart docker
+  systemd:
+    name: docker
+    state: restarted
+    enabled: yes
+

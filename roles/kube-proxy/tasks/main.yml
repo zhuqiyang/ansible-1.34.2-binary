@@ -1,0 +1,16 @@
+---
+- name: 检查 kube-proxyok 文件是否存在
+  stat:
+    path: /root/.state/kube-proxyok
+  register: kube_proxyok_result
+  no_log: true
+
+- name: kube-proxy已安装
+  debug:
+    msg: kube-proxy已安装
+  when: kube_proxyok_result.stat.exists
+
+- name: 安装 kube-proxy
+  include_tasks: install-kube-proxy.yml
+  when: not kube_proxyok_result.stat.exists
+

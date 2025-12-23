@@ -1,0 +1,17 @@
+---
+# 生成 Kubernetes 配置文件（证书和 kubeconfig）
+- name: 生成 Kubernetes 配置文件
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  any_errors_fatal: true
+  
+  pre_tasks:
+    - name: 加载 group_vars 目录中的所有变量文件
+      include_vars:
+        dir: ../group_vars
+        extensions: ['yml', 'yaml']
+  
+  roles:
+    - configure
+

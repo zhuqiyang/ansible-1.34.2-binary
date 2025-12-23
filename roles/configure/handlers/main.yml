@@ -1,0 +1,7 @@
+---
+# configure 角色的 handlers
+
+- name: reload config
+  debug:
+    msg: "配置已重新加载"
+

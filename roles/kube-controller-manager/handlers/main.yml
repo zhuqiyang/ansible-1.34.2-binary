@@ -1,0 +1,9 @@
+---
+# kube-controller-manager 角色的 handlers
+
+- name: restart kube-controller-manager
+  systemd:
+    name: kube-controller-manager
+    state: restarted
+    enabled: yes
+

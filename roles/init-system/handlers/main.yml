@@ -1,0 +1,10 @@
+---
+# init-system 角色的 handlers
+
+- name: restart systemd
+  systemd:
+    daemon_reload: yes
+
+- name: reload sysctl
+  command: sysctl --system
+

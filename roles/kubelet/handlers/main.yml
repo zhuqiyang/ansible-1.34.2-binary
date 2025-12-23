@@ -1,0 +1,9 @@
+---
+# kubelet 角色的 handlers
+
+- name: restart kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+    enabled: yes
+

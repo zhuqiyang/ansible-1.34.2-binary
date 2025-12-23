@@ -1,0 +1,14 @@
+- name: 检查 kube-schedulerok 文件是否存在
+  stat:
+    path: /root/.state/kube-schedulerok
+  register: kube_schedulerok_result
+  no_log: true
+
+- name: kube-scheduler已安装
+  debug:
+    msg: kube-scheduler已安装
+  when: kube_schedulerok_result.stat.exists
+
+- name: 安装 kube-scheduler
+  include_tasks: install-kube-scheduler.yml
+  when: not kube_schedulerok_result.stat.exists

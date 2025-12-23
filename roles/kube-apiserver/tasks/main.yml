@@ -1,0 +1,15 @@
+---
+- name: 检查 kube-apiserverok 文件是否存在
+  stat:
+    path: /root/.state/kube-apiserverok
+  register: kube_apiserverok_result
+  no_log: true
+
+- name: kube-apiserver已安装
+  debug:
+    msg: kube-apiserver已安装
+  when: kube_apiserverok_result.stat.exists
+
+- name: 安装 kube-apiserver
+  include_tasks: install-apiserver.yml
+  when: not kube_apiserverok_result.stat.exists

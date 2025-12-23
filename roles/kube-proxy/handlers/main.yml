@@ -1,0 +1,9 @@
+---
+# kube-proxy 角色的 handlers
+
+- name: restart kube-proxy
+  systemd:
+    name: kube-proxy
+    state: restarted
+    enabled: yes
+

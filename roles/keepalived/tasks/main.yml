@@ -1,0 +1,16 @@
+---
+- name: 检查 keepalived是否已经安装
+  stat:
+    path: /root/.state/keepalivedok
+  register: keepalivedok_result
+  no_log: true
+
+- name: keepalived已安装
+  debug:
+    msg: keepalived已安装
+  when: keepalivedok_result.stat.exists
+
+# 安装 keepalived
+- name: 安装 keepalived
+  include_tasks: install-keepalived.yml
+  when: not keepalivedok_result.stat.exists

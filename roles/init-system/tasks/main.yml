@@ -1,0 +1,18 @@
+---
+# 检查 initok 文件是否存在
+- name: 检查是否已经初始化
+  stat:
+    path: /root/.state/initok
+  register: initok_result
+  no_log: true
+
+# 如果 initok 文件不存在，则初始化系统
+- name: 进行初始化
+  include_tasks: init-system.yml
+  when: not initok_result.stat.exists
+
+- name: 初始化完成
+  debug:
+    msg: "已初始化完成"
+  when: initok_result.stat.exists
+

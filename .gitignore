@@ -1,0 +1,39 @@
+# Ansible
+*.retry
+ansible.log
+.vault_pass
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+*~
+
+# 证书和密钥（敏感文件）
+*.key
+*.crt
+*.pem
+!roles/**/*.key.example
+!roles/**/*.crt.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 下载的二进制文件目录
+files/download/
+

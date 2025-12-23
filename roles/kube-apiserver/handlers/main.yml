@@ -1,0 +1,9 @@
+---
+# kube-apiserver 角色的 handlers
+
+- name: restart kube-apiserver
+  systemd:
+    name: kube-apiserver
+    state: restarted
+    enabled: yes
+

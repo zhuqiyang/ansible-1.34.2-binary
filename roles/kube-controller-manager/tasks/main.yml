@@ -1,0 +1,15 @@
+---
+- name: 检查 controller-managerok 文件是否存在
+  stat:
+    path: /root/.state/controller-managerok
+  register: controller_managerok_result
+  no_log: true
+
+- name: controller-manager已安装
+  debug:
+    msg: controller-manager已安装
+  when: controller_managerok_result.stat.exists
+
+- name: 安装 controller-manager
+  include_tasks: install-controller-manager.yml
+  when: not controller_managerok_result.stat.exists

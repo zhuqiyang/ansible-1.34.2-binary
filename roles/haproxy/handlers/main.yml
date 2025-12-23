@@ -1,0 +1,9 @@
+---
+# haproxy 角色的 handlers
+
+- name: restart haproxy
+  systemd:
+    name: haproxy
+    state: restarted
+    enabled: yes
+

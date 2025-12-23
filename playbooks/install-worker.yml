@@ -1,0 +1,19 @@
+---
+# 安装 Kubernetes Worker 节点
+- name: 安装 Kubernetes Worker
+  hosts: workers
+  become: yes
+  gather_facts: yes
+  any_errors_fatal: true
+  pre_tasks:
+    - name: 加载 group_vars 目录中的所有变量文件
+      include_vars:
+        dir: ../group_vars
+        extensions: ['yml', 'yaml']
+        
+  roles:
+    - init-system
+    - docker
+    - kubelet
+    - kube-proxy
+

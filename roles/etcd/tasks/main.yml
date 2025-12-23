@@ -1,0 +1,16 @@
+---
+- name: 检查etcd是否已经安装
+  stat:
+    path: /root/.state/etcdok
+  register: etcdok_result
+  no_log: true
+
+- name: etcd已安装
+  debug:
+    msg: etcd已安装
+  when: etcdok_result.stat.exists
+
+# 如果etcd未安装，则安装etcd
+- name: 安装etcd
+  include_tasks: install-etcd.yml
+  when: not etcdok_result.stat.exists

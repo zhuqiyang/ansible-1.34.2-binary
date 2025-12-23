@@ -1,0 +1,9 @@
+---
+# kube-scheduler 角色的 handlers
+
+- name: restart kube-scheduler
+  systemd:
+    name: kube-scheduler
+    state: restarted
+    enabled: yes
+

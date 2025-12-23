@@ -1,0 +1,75 @@
+# 获取项目根目录（playbook_dir指向playbooks目录，需要向上找一级）
+- name: 设置项目根目录
+  delegate_to: 127.0.0.1
+  run_once: true
+  set_fact:
+    project_root: "{{ playbook_dir | dirname }}"
+
+- name: 确保目标目录存在
+  delegate_to: 127.0.0.1
+  run_once: true
+  file:
+    path: "{{ project_root }}/roles/configure/files/scripts/cert"
+    state: directory
+    mode: '0755'
+
+- name: copy ssl_vars.sh.j2 to {{ project_root }}/roles/configure/files/scripts/cert/ssl_vars.sh
+  delegate_to: 127.0.0.1
+  run_once: true
+  template:
+    src: ssl_vars.sh.j2
+    dest: "{{ project_root }}/roles/configure/files/scripts/cert/ssl_vars.sh"
+
+# 本地执行脚本
+- name: 确保脚本有执行权限
+  delegate_to: 127.0.0.1
+  run_once: true
+  file:
+    path: "{{ project_root }}/roles/configure/files/scripts/cert/create_certs_kubeconfigs.sh"
+    mode: '0755'
+
+- name: 本地执行脚本
+  delegate_to: 127.0.0.1
+  run_once: true
+  shell: bash create_certs_kubeconfigs.sh
+  args:
+    chdir: "{{ project_root }}/roles/configure/files/scripts/cert"
+  register: create_certs_kubeconfigs_result
+  no_log: true
+- name: print create_certs_kubeconfigs_result
+  run_once: true
+  debug:
+    var: create_certs_kubeconfigs_result.stdout_lines
+
+- name: 确保 files 目录存在
+  delegate_to: 127.0.0.1
+  run_once: true
+  file:
+    path: "{{ project_root }}/files"
+    state: directory
+    mode: '0755'
+
+- name: 将生成的 generate 文件夹复制到 files 目录
+  delegate_to: 127.0.0.1
+  run_once: true
+  copy:
+    src: "{{ project_root }}/roles/configure/files/scripts/cert/generate"
+    dest: "{{ project_root }}/files/"
+    remote_src: yes
+    mode: preserve
+
+- name: 在/root/目录下创建 .state 目录
+  file:
+    path: /root/.state
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: 在/root/.state/目录下创建 certok 文件
+  file:
+    path: /root/.state/certok
+    state: touch
+    mode: 0644
+    owner: root
+    group: root

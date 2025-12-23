@@ -1,0 +1,15 @@
+---
+- name: 检查 addonsok 文件是否存在
+  stat:
+    path: /root/.state/addonsok
+  register: addonsok_result
+  no_log: true
+
+- name: addons已安装
+  debug:
+    msg: addons已安装
+  when: addonsok_result.stat.exists
+
+- name: 安装 addons
+  include_tasks: install-addons.yml
+  when: not addonsok_result.stat.exists

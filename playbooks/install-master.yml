@@ -1,0 +1,26 @@
+---
+# 安装 Kubernetes Master 节点
+- name: 安装 Kubernetes Master
+  hosts: masters
+  become: yes
+  gather_facts: yes
+  any_errors_fatal: true
+  pre_tasks:
+    - name: 加载 group_vars 目录中的所有变量文件
+      include_vars:
+        dir: ../group_vars
+        extensions: ['yml', 'yaml']
+        
+  roles:
+    - init-system
+    - docker
+    - etcd
+    - keepalived
+    - haproxy
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - kubelet
+    - kube-proxy
+    - addons
+
