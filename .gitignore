@@ -37,3 +37,6 @@ Thumbs.db
 # 下载的二进制文件目录
 files/download/
 
+# 证书生成脚本的备份目录（带时间戳的 generate-xxxxxx 文件夹）
+roles/configure/files/scripts/cert/generate-*/
+
