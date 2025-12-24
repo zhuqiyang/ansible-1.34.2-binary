@@ -22,10 +22,19 @@
     src: "{{ playbook_dir | dirname }}/files/download/kubelet"
     dest: /usr/local/kubernetes/
     mode: "0755"
+
 - name: copy kubelet.service.docker.j2 to /usr/lib/systemd/system/
   template:
     src: kubelet.service.docker.j2
     dest: /usr/lib/systemd/system/kubelet.service
+  when: container_runtime == 'docker'
+
+- name: copy kubelet.service.containerd.j2 to /usr/lib/systemd/system/
+  template:
+    src: kubelet.service.containerd.j2
+    dest: /usr/lib/systemd/system/kubelet.service
+  when: container_runtime == 'containerd'
+
 - name: copy kubelet-conf.yml.j2 to /etc/kubernetes/
   template:
     src: kubelet-conf.yml.j2

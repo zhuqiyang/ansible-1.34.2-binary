@@ -6,10 +6,10 @@ Requires=cri-docker.service
 
 [Service]
 ExecStart=/usr/local/kubernetes/kubelet \
-    --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig  \
+    --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig \
     --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
     --config=/etc/kubernetes/kubelet-conf.yml \
-    --container-runtime-endpoint=unix:///run/cri-dockerd.sock  \
+    --container-runtime-endpoint=unix:///run/cri-dockerd.sock \
     --cgroup-driver=systemd \
     --node-labels=node.kubernetes.io/node=
 

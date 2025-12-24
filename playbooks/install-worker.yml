@@ -13,7 +13,7 @@
         
   roles:
     - init-system
-    - docker
+    - container-runtime
     - kubelet
     - kube-proxy
 

@@ -131,9 +131,9 @@
     enabled: yes
   no_log: true
 
-- name: dockerok
+- name: container-runtimeok
   file:
-    path: /root/.state/dockerok
+    path: /root/.state/container-runtimeok
     state: touch
     mode: 0644
     owner: root

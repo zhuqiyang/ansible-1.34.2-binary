@@ -1,0 +1,19 @@
+---
+- name: 检查container_runtime是否已安装
+  stat:
+    path: /root/.state/container-runtimeok
+  register: container_runtimeok_result
+  no_log: true
+
+- name: container-runtime已安装
+  debug:
+    msg: container-runtime已安装
+  when: container_runtimeok_result.stat.exists
+
+- name: 安装docker
+  include_tasks: install-docker.yml
+  when: not container_runtimeok_result.stat.exists and container_runtime == 'docker'
+
+- name: 安装containerd
+  include_tasks: install-containerd.yml
+  when: not container_runtimeok_result.stat.exists and container_runtime == 'containerd'
