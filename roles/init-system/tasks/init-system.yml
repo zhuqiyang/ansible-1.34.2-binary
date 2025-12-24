@@ -252,7 +252,7 @@
 
 #安装 conntrack
 - name: 安装 conntrack
-  package:
+  apt:
     name: conntrack
     state: present
   no_log: true
