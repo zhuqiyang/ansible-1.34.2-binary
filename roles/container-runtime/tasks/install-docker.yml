@@ -119,6 +119,23 @@
     owner: root
     group: root
 
+- name: mkdir /etc/systemd/system/docker.service.d/
+  file:
+    path: /etc/systemd/system/docker.service.d/
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy proxy.conf.j2 to /etc/systemd/system/docker.service.d/proxy.conf
+  template:
+    src: proxy.conf.j2
+    dest: /etc/systemd/system/docker.service.d/proxy.conf
+    mode: 0644
+    owner: root
+    group: root
+  when: docker_proxy_enabled is defined and docker_proxy_enabled == true
+
 # systemctl status cri-docker.socket
 - name: systemctl enable --now cri-docker.socket
   shell: systemctl enable --now cri-docker.socket

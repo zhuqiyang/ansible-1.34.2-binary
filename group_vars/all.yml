@@ -35,6 +35,10 @@ dns_clusterip: '172.16.0.10'
 # 镜像仓库harbor的地址
 harbor_hostname: 'harbor.k8s.local'
 
+# docker proxy url
+docker_proxy_enabled: true
+docker_proxy_url: 'http://192.168.0.100:7897'
+
 # 各个节点的DNS解析
 hosts:
 - { ip_address: '192.168.0.112', name: 'master01.k8s.local', alias: 'etcd01.k8s.local' }
