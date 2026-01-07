@@ -10,7 +10,7 @@ COMMON_LOAD_BALANCE_PORT: '8443'
 COMMON_K8S_IPS: '192.168.0.112,192.168.0.113,192.168.0.114,192.168.0.119'
 
 # 容器运行时 docker or containerd
-container_runtime: 'docker'
+container_runtime: 'containerd'
 # docker 数据存储目录，默认在/var/lib/docker目录
 docker_data_root: '/var/lib/docker'
 
@@ -35,9 +35,9 @@ dns_clusterip: '172.16.0.10'
 # 镜像仓库harbor的地址
 harbor_hostname: 'harbor.k8s.local'
 
-# docker proxy url
-docker_proxy_enabled: true
-docker_proxy_url: 'http://192.168.0.100:7897'
+# 镜像下载代理地址
+proxy_enabled: true
+proxy_url: 'socks5://192.168.0.100:7897'
 
 # 各个节点的DNS解析
 hosts:

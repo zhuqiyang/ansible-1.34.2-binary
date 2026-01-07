@@ -251,11 +251,24 @@
 
 
 #安装 conntrack
+- name: 等待 apt 锁释放
+  shell: |
+    while fuser /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock >/dev/null 2>&1; do
+      echo "等待 apt 锁释放..."
+      sleep 5
+    done
+  register: wait_apt_lock
+  changed_when: false
+  failed_when: false
+  timeout: 300
+
 - name: 安装 conntrack
   apt:
     name: conntrack
     state: present
-  no_log: true
+  retries: 3
+  delay: 10
+  no_log: false
 
 # load ipvs modules
 - name: copy ipvs.conf to /etc/modules-load.d/ipvs.conf
@@ -376,6 +389,6 @@
 # reboot
 - name: 重启
   shell: reboot
-- name: 等待 10 秒
+- name: 等待 20 秒
   pause:
-    seconds: 10
+    seconds: 20

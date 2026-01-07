@@ -134,7 +134,7 @@
     mode: 0644
     owner: root
     group: root
-  when: docker_proxy_enabled is defined and docker_proxy_enabled == true
+  when: proxy_enabled is defined and proxy_enabled == true
 
 # systemctl status cri-docker.socket
 - name: systemctl enable --now cri-docker.socket

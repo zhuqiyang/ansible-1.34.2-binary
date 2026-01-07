@@ -1,24 +1,252 @@
+#检查/proc/1/ns/cgroup是否存在
+- name: 检查/proc/1/ns/cgroup是否存在
+  shell: if [ -f /proc/1/ns/cgroup ]; then echo 'cgroup /proc/1/ns/cgroup exists'; else echo 'cgroup /proc/1/ns/cgroup not exists';exit 1; fi
+
+
+# 将 cni-plugins-linux-amd64-v{{ cni_version }}.tgz 解压到远程的 /opt/cni/bin/ 目录
+- name: 创建 CNI 目录
+  file:
+    path: /opt/cni/bin
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: 查找 CNI 插件包文件
+  find:
+    paths: "{{ playbook_dir | dirname }}/files/download"
+    patterns: "cni-plugins-linux-amd64-v*.tgz"
+    use_regex: no
+  register: cni_file_result
+  delegate_to: 127.0.0.1
+  run_once: true
+
+- name: 复制并解压 CNI 插件包
+  unarchive:
+    src: "{{ cni_file_result.files[0].path }}"
+    dest: /opt/cni/bin
+    remote_src: no
+    mode: 0755
+    owner: root
+    group: root
 
 - name: 检查 containerd 是否安装
   stat:
     path: /run/containerd/containerd.sock
   register: file_stat
 
-- name: 安装 containerd
-  apt:
+# - name: 安装 containerd
+#   apt:
+#     name: containerd
+#     state: present
+#   when: not file_stat.stat.exists
+
+# - name: 打印 containerd 安装结果
+#   debug:
+#     var: file_stat
+
+
+- name: copy containerd.service.j2 to /usr/lib/systemd/system/containerd.service
+  template:
+    src: containerd.service.j2
+    dest: /usr/lib/systemd/system/containerd.service
+    mode: 0644
+    owner: root
+    group: root
+
+- name: mkdir /usr/local/bin/
+  file:
+    path: /usr/local/bin/
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy containerd to /usr/local/bin/
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/containerd"
+    dest: /usr/local/bin/containerd
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy containerd-shim-runc-v2 to /usr/local/bin/
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/containerd-shim-runc-v2"
+    dest: /usr/local/bin/containerd-shim-runc-v2
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy containerd-stress to /usr/local/bin/
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/containerd-stress"
+    dest: /usr/local/bin/containerd-stress
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy ctr to /usr/local/bin/
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/ctr"
+    dest: /usr/local/bin/ctr
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy runc to /usr/local/bin/
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/runc"
+    dest: /usr/local/bin/runc
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy runc to /usr/bin/
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/runc"
+    dest: /usr/bin/runc
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy runc to /usr/local/sbin/
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/runc"
+    dest: /usr/local/sbin/runc
+    mode: 0755
+    owner: root
+    group: root
+
+- name: mkdir /etc/containerd/
+  file:
+    path: /etc/containerd/
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+# set config pause image
+- name: copy config.toml.j2 to /etc/containerd/
+  template:
+    src: config.toml.j2
+    dest: /etc/containerd/config.toml
+    mode: 0644
+    owner: root
+    group: root
+
+# # config harbor
+# - name: mkdir /etc/containerd/certs.d/{{ harbor_hostname }}/
+#   file:
+#     path: /etc/containerd/certs.d/{{ harbor_hostname }}/
+#     state: directory
+# - name: copy hosts.toml.harbor.local.j2 to /etc/containerd/certs.d/{{ harbor_hostname }}/
+#   template:
+#     src: hosts.toml.harbor.local.j2
+#     dest: /etc/containerd/certs.d/{{ harbor_hostname }}/hosts.toml
+#     mode: 0644
+#     owner: root
+#     group: root
+
+# # config docker.io
+# - name: mkdir /etc/containerd/certs.d/docker.io/
+#   file:
+#     path: /etc/containerd/certs.d/docker.io/
+#     state: directory
+# - name: copy hosts.toml.docker.io.j2 to /etc/containerd/certs.d/docker.io/
+#   template:
+#     src: hosts.toml.docker.io.j2
+#     dest: /etc/containerd/certs.d/docker.io/hosts.toml
+#     mode: 0644
+#     owner: root
+#     group: root
+
+# # config registry.k8s.io
+# - name: mkdir /etc/containerd/certs.d/registry.k8s.io/
+#   file:
+#     path: /etc/containerd/certs.d/registry.k8s.io/
+#     state: directory
+# - name: copy hosts.toml.k8s.io.j2 to /etc/containerd/certs.d/registry.k8s.io/
+#   template:
+#     src: hosts.toml.k8s.io.j2
+#     dest: /etc/containerd/certs.d/registry.k8s.io/hosts.toml
+#     mode: 0644
+#     owner: root
+#     group: root
+
+# 自 containerd 1.1 版本起，其内置的cri插件已经直接集成在 containerd 的主项目中，并默认启用
+# - name: 安装 containerd-cri
+#   apt:
+#     name: containerd-cri
+#     state: present
+#   when: not file_stat.stat.exists
+
+- name: mkdir /etc/systemd/system/containerd.service.d/
+  file:
+    path: /etc/systemd/system/containerd.service.d/
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy proxy.conf.j2 to /etc/systemd/system/containerd.service.d/http-proxy.conf
+  template:
+    src: proxy.conf.j2
+    dest: /etc/systemd/system/containerd.service.d/http-proxy.conf
+    mode: 0644
+    owner: root
+    group: root
+  when: proxy_enabled is defined and proxy_enabled == true
+
+- name: copy nerdctl to /usr/local/bin/nerdctl
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/nerdctl"
+    dest: /usr/local/bin/nerdctl
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy nerdctl.toml.j2 to /etc/nerdctl.toml
+  template:
+    src: nerdctl.toml.j2
+    dest: /etc/nerdctl.toml
+    mode: 0644
+    owner: root
+    group: root
+
+- name: copy crictl to /usr/local/bin/crictl
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/crictl"
+    dest: /usr/local/bin/crictl
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy crictl.yaml.j2 to /etc/crictl.yaml
+  template:
+    src: crictl.yaml.j2
+    dest: /etc/crictl.yaml
+    mode: 0644
+    owner: root
+    group: root
+
+# systemctl daemon-reload
+- name: systemctl daemon-reload
+  shell: systemctl daemon-reload
+  no_log: true
+
+# systemctl enable --now containerd
+- name: systemctl enable --now containerd
+  shell: systemctl enable --now containerd
+  no_log: true
+
+# 重启 containerd 服务
+- name: 重启 containerd 服务
+  systemd:
     name: containerd
-    state: present
-  when: not file_stat.stat.exists
-
-- name: 打印 containerd 安装结果
-  debug:
-    var: file_stat
-
-- name: 安装 containerd-cri
-  apt:
-    name: containerd-cri
-    state: present
-  when: not file_stat.stat.exists
+    state: restarted
+    enabled: yes
+  no_log: true
 
 - name: container-runtimeok
   file:
