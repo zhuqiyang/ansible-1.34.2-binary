@@ -11,6 +11,7 @@ nerdctl_version=2.2.1
 crictl_version=1.34.0
 containerd_version=2.0.5
 runc_version=1.1.12
+cilium_version=0.18.9
 
 # 所有下载的文件统一放在当前目录下的 download 目录中
 DOWNLOAD_DIR="$(pwd)/download"
@@ -97,4 +98,12 @@ fi
 if [ ! -f "${DOWNLOAD_DIR}/runc" ]; then
     wget -O "${DOWNLOAD_DIR}/runc" "${proxy_url}https://github.com/opencontainers/runc/releases/download/v${runc_version}/runc.amd64"
     chmod +x "${DOWNLOAD_DIR}/runc"
+fi
+
+
+if [ ! -f "${DOWNLOAD_DIR}/cilium-linux-amd64.tar.gz" ]; then
+    wget -O "${DOWNLOAD_DIR}/cilium-linux-amd64.tar.gz" "${proxy_url}https://github.com/cilium/cilium-cli/releases/download/v${cilium_version}/cilium-linux-amd64.tar.gz"
+    if [ ! -f "${DOWNLOAD_DIR}/cilium" ]; then
+        tar -xf "${DOWNLOAD_DIR}/cilium-linux-amd64.tar.gz" -C "${DOWNLOAD_DIR}"
+    fi
 fi

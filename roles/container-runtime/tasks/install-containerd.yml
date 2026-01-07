@@ -135,6 +135,22 @@
     owner: root
     group: root
 
+# config SystemdCgroup = false to true
+- name: 配置 SystemdCgroup 为 true
+  replace:
+    path: /etc/containerd/config.toml
+    regexp: '^(\s*)SystemdCgroup\s*=\s*false'
+    replace: '\1SystemdCgroup = true'
+    backup: yes
+  ignore_errors: yes
+  register: systemd_cgroup_result
+  no_log: true
+
+- name: 显示 SystemdCgroup 配置结果
+  debug:
+    msg: "SystemdCgroup 配置{{ '成功' if systemd_cgroup_result.changed else '未修改或已为 true' }}"
+  when: systemd_cgroup_result is defined
+
 # # config harbor
 # - name: mkdir /etc/containerd/certs.d/{{ harbor_hostname }}/
 #   file:

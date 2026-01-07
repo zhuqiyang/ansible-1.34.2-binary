@@ -17,6 +17,14 @@
     src: addon_vars.sh.j2
     dest: /root/addons/addon_vars.sh
 
+- name: copy cilium to /usr/local/bin/
+  copy:
+    src: "{{ playbook_dir | dirname }}/files/download/cilium"
+    dest: /usr/local/bin/cilium-cli
+    mode: 0755
+    owner: root
+    group: root
+
 - name: 创建 addonsok 文件
   file:
     path: /root/.state/addonsok
