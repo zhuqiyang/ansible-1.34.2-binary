@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#export https_proxy=http://192.168.0.100:7897
+#export http_proxy=http://192.168.0.100:7897
 
 # 安装 helm
 wget https://mirrors.huaweicloud.com/helm/v3.16.3/helm-v3.16.3-linux-amd64.tar.gz
