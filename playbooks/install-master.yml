@@ -12,15 +12,15 @@
         extensions: ['yml', 'yaml']
         
   roles:
-    # - init-system
+    - init-system
     - container-runtime
-    # - etcd
-    # - keepalived
-    # - haproxy
-    # - kube-apiserver
-    # - kube-controller-manager
-    # - kube-scheduler
-    # - kubelet
-    # - kube-proxy
+    - etcd
+    - keepalived
+    - haproxy
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - kubelet
+    - kube-proxy
     - addons
 
