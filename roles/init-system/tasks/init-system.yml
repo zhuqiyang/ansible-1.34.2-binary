@@ -55,6 +55,23 @@
   debug:
     var: hosts_result.stdout_lines
 
+# 备份 sources.list 文件
+- name: 备份 sources.list 文件
+  copy:
+    src: /etc/apt/sources.list
+    dest: /etc/apt/sources.list.bak-{{ ansible_date_time.iso8601 }}
+    mode: 0644
+    owner: root
+    group: root
+
+# 备份 /etc/apt/sources.list.d/ 目录
+- name: 备份 /etc/apt/sources.list.d/ 目录
+  copy:
+    src: /etc/apt/sources.list.d/
+    dest: /etc/apt/sources.list.d.bak-{{ ansible_date_time.iso8601 }}
+    mode: 0755
+    owner: root
+    group: root
 
 - name: 复制 sources.list 到 /etc/apt/sources.list
   copy:
